@@ -1,0 +1,140 @@
+---
+title: "Lab 6 with plotly"
+author: "Kat Vrotsos"
+format: dashboard
+orientation: rows
+---
+
+```{r}
+#| label: load-packages
+library(tidyverse)
+library(palmerpenguins)
+library(colorblindr)
+library(gapminder)
+library(plotly)
+```
+
+# Lab 4: Palmer Penguins
+
+## Graphs from Lab 4 {.sidebar}
+
+The following graphs were created using the **penguins dataset** from the R package **{palmerpenguins}**.
+
+## Row {.panel height="10%"}
+
+The following graphs display Bill Length vs. Bill Depth in Millimeters by Penguin Species using different colorblind friendly scales.
+
+## Row {.tabset}
+
+#### Okabe Ito
+
+```{r}
+penguins |>
+  ggplot(aes(bill_length_mm, bill_depth_mm)) +
+  geom_point(aes(color = species)) +
+  scale_color_OkabeIto() +
+  labs(
+    title = 'Bill Length vs. Bill Depth in Millimeters by Penguin Species',
+    subtitle = 'Okabe-Ito Colors',
+    x = 'Bill Length (mm)',
+    y = 'Bill Depth (mm)',
+    color = 'Species'
+  ) +
+    theme_minimal()
+```
+
+#### Viridis Plasma
+
+```{r}
+penguins |>
+  ggplot(aes(bill_length_mm, bill_depth_mm)) +
+  geom_point(aes(color = species)) +
+  scale_color_viridis_d(option = "plasma") +
+  labs(
+    title = 'Bill Length vs. Bill Depth in Millimeters by Penguin Species',
+    subtitle = 'Viridis Discrete Colors',
+    x = 'Bill Length (mm)',
+    y = 'Bill Depth (mm)',
+    color = 'Species'
+  ) +
+    theme_minimal()
+```
+
+#### ColorBrewer Set2
+
+```{r}
+penguins |>
+  ggplot(aes(bill_length_mm, bill_depth_mm)) +
+  geom_point(aes(color = species)) +
+  scale_color_brewer(palette = "Set2") +
+  labs(
+    title = 'Bill Length vs. Bill Depth in Millimeters by Penguin Species',
+    subtitle = 'ColorBrewer Set2 Colors',
+    x = 'Bill Length (mm)',
+    y = 'Bill Depth (mm)',
+    color = 'Species'
+  ) +
+  theme_minimal()
+```
+
+# Lab 5: Gapminder
+
+## Graphs from Lab 4 {.sidebar}
+
+The following graphs were created using the **Gapminder dataset** from the R package **{gapminder}**.
+
+## Row {.panel height="10%"}
+
+The following graphs display 2007 GDP per Capita by Country in the Americas as a dot plot and lollipop chart.
+
+## Row {.tabset height="90%"}
+
+#### Dot Plot
+```{r}
+gapminder |> 
+  filter(year == 2007, continent == 'Americas') |>
+  mutate(country = fct_reorder(country, gdpPercap, .desc = TRUE)) |>
+  ggplot(aes(gdpPercap, country)) +
+  geom_point(size = 4, color = "#0072B2") +
+  scale_x_continuous(labels = scales::dollar) +
+  labs(x = "GDP per Capita",
+       y = 'Country',
+       title = "2007 GDP per Capita by Country in the Americas") +
+  theme_minimal()
+```
+
+#### Lollipop Chart
+```{r}
+gapminder |> 
+  filter(year == 2007, continent == 'Americas') |>
+  mutate(country = fct_reorder(country, gdpPercap, .desc = TRUE)) |>
+  ggplot(aes(gdpPercap, country)) +
+  geom_point(size = 4, color = "#0072B2") +
+  geom_segment(aes(x = 0, xend = gdpPercap, y = country, yend = country), color = "grey") +
+  scale_x_continuous(labels = scales::dollar) +
+  labs(x = "GDP per Capita",
+       y = 'Country',
+       title = "2007 GDP per Capita by Country in the Americas") +
+  theme_minimal()
+```
+
+# Using the {plotly} package in R
+
+## Row
+```{r}
+p <- penguins |>
+  ggplot(aes(bill_length_mm, bill_depth_mm)) +
+  geom_point(aes(color = species)) +
+  scale_color_brewer(palette = "Set2") +
+  labs(
+    title = 'Bill Length vs. Bill Depth in Millimeters by Penguin Species',
+    subtitle = 'ColorBrewer Set2 Colors',
+    x = 'Bill Length (mm)',
+    y = 'Bill Depth (mm)',
+    color = 'Species'
+  ) +
+  theme_minimal()
+
+ggplotly(p)
+```
+
