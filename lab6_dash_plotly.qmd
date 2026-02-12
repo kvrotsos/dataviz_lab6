@@ -2,6 +2,7 @@
 title: "Lab 6 with plotly"
 author: "Kat Vrotsos"
 format: dashboard
+embed-resources: true
 orientation: rows
 ---
 
